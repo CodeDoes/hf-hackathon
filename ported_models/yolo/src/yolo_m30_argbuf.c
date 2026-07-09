@@ -618,7 +618,22 @@ int main(uintptr_t arg_area)
         CONV_1x1(cat384, p5_out, WP(WR_model_22_cv2_conv_Conv_W), WP(WR_model_22_cv2_conv_Conv_B), 384u, 9u, 16u, 256u, 1u);
     }
 
-    /* Evict all dump taps */
+#ifndef YOLO_SKIP_FINAL_EVICT
+    EVICT_AND_FENCE(c0,      16u * 144u * 256u * sizeof(float));
+    EVICT_AND_FENCE(c1,      32u *  72u * 128u * sizeof(float));
+    EVICT_AND_FENCE(c2f_m2,  32u *  72u * 128u * sizeof(float));
+    EVICT_AND_FENCE(c3,      64u *  36u *  64u * sizeof(float));
+    EVICT_AND_FENCE(c2f_m4,  64u *  36u *  64u * sizeof(float));
+    EVICT_AND_FENCE(c5_post, 128u * 36u *  64u * sizeof(float));
+    EVICT_AND_FENCE(c2f_m6,  128u * 18u *  32u * sizeof(float));
+    EVICT_AND_FENCE(c7_post, 256u * 18u *  32u * sizeof(float));
+    EVICT_AND_FENCE(c2f_m8,  256u *  9u *  16u * sizeof(float));
+    EVICT_AND_FENCE(sppf,    256u *  9u *  16u * sizeof(float));
+    EVICT_AND_FENCE(psa_out, 256u *  9u *  16u * sizeof(float));
+    EVICT_AND_FENCE(p3_out,   64u * 36u *  64u * sizeof(float));
+    EVICT_AND_FENCE(p4_out,  128u * 18u *  32u * sizeof(float));
+    EVICT_AND_FENCE(p5_out,  256u *  9u *  16u * sizeof(float));
+#endif
 
     /* === Detection heads (model.23) ===
      * For each scale k in {0=P3, 1=P4, 2=P5}:
@@ -677,6 +692,15 @@ int main(uintptr_t arg_area)
     CONV_DW3x3_S1_P1_VPU(tb, tc, WP(WR_model_23_cv3_2_cv3_2_1_cv3_2_1_0_conv_Conv_W), WP(WR_model_23_cv3_2_cv3_2_1_cv3_2_1_0_conv_Conv_B), 80u, 9u, 16u, 1u);
     CONV_1x1(tc, td, WP(WR_model_23_cv3_2_cv3_2_1_cv3_2_1_1_conv_Conv_W), WP(WR_model_23_cv3_2_cv3_2_1_cv3_2_1_1_conv_Conv_B), 80u, 9u, 16u, 80u, 1u);
     CONV_1x1(td, cls2, WP(WR_model_23_cv3_2_cv3_2_2_Conv_W), WP(WR_model_23_cv3_2_cv3_2_2_Conv_B), 80u, 9u, 16u, 80u, 0u);
+
+#ifndef YOLO_SKIP_FINAL_EVICT
+    EVICT_AND_FENCE(reg0, 64u * 36u * 64u * sizeof(float));
+    EVICT_AND_FENCE(cls0, 80u * 36u * 64u * sizeof(float));
+    EVICT_AND_FENCE(reg1, 64u * 18u * 32u * sizeof(float));
+    EVICT_AND_FENCE(cls1, 80u * 18u * 32u * sizeof(float));
+    EVICT_AND_FENCE(reg2, 64u *  9u * 16u * sizeof(float));
+    EVICT_AND_FENCE(cls2, 80u *  9u * 16u * sizeof(float));
+#endif
 
     /* === DFL decode + box decode + class sigmoid -> final [1,84,3024] === */
     float *final_out = (float *)(base + FINAL_OUT_OFFSET);
