@@ -379,6 +379,24 @@
       "size_bytes": 175054528,
       "note": "SmolVLM 256M LLM Q8_0 (Idefics3 arch). LLM backbone is SmolLM2-135M-Instruct (already ported). Requires mmproj for vision."
     },
+    "minicpm5_1b_q8_gguf": {
+      "kind": "model",
+      "framework": "llama.cpp-et",
+      "variant": "MiniCPM5-1B-Q8_0",
+      "filename": "MiniCPM5-1B-Q8_0.gguf",
+      "env": "MINICPM5_1B_MODEL_PATH",
+      "source": {
+        "type": "huggingface",
+        "repo": "openbmb/MiniCPM5-1B-GGUF",
+        "revision": "87007042419d30c1d8f38ef065424ee33870831e",
+        "filename": "MiniCPM5-1B-Q8_0.gguf",
+        "url": "https://huggingface.co/openbmb/MiniCPM5-1B-GGUF/resolve/87007042419d30c1d8f38ef065424ee33870831e/MiniCPM5-1B-Q8_0.gguf"
+      },
+      "local_cache": "local-artifacts/models/minicpm5_1b/MiniCPM5-1B-Q8_0.gguf",
+      "sha256": "0dc7638539067268774c275a14a6ec9c7e01f7eeb2cff606c8590361fa527e4c",
+      "size_bytes": 1153529216,
+      "note": "MiniCPM5-1B Q8_0 GGUF from OpenBMB. Standard Llama architecture, fully supported by the ET backend."
+    },
     "smolvlm_256m_mmproj_q8": {
       "kind": "model",
       "framework": "llama.cpp-et",
