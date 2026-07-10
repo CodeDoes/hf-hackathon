@@ -618,8 +618,6 @@ int main(uintptr_t arg_area)
         CONV_1x1(cat384, p5_out, WP(WR_model_22_cv2_conv_Conv_W), WP(WR_model_22_cv2_conv_Conv_B), 384u, 9u, 16u, 256u, 1u);
     }
 
-    /* Evict all dump taps */
-
     /* === Detection heads (model.23) ===
      * For each scale k in {0=P3, 1=P4, 2=P5}:
      *   reg branch (cv2.k.0 -> cv2.k.1 -> cv2.k.2) - 64 ch DFL logits, no act on .2
